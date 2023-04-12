@@ -27,12 +27,12 @@ public class BarraDerecha extends JLabel implements Runnable {
     while (true) { // ciclo infinito
         if (!isMovingUp && posY <= 654) { // movimiento hacia abajo
             posY += power;
-            setBounds(750, posY, 15, 80);
+            setBounds(750, posY, 15, 320);
         } else if (!isMovingUp && posY >= 654) { // cambio de dirección: empezar a moverse hacia arriba
             isMovingUp = true;
         } else if (isMovingUp && posY >= 60) { // movimiento hacia arriba
             posY -= power;
-            setBounds(750, posY, 15, 80);
+            setBounds(750, posY, 15, 320);
         } else { // cambio de dirección: empezar a moverse hacia abajo
             isMovingUp = false;
         }
@@ -46,6 +46,5 @@ public class BarraDerecha extends JLabel implements Runnable {
         }
     }
 } //end moveImage
-
 	
 }

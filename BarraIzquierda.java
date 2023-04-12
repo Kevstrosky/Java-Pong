@@ -29,19 +29,20 @@ public class BarraIzquierda extends JLabel implements Runnable, KeyListener {
 	
 	private void moveImage(int power, int time) {
 		setIcon(icon);
-		if(posY <= 654) {
+		if(posY <= 614) {
 			posY += power;
-			setBounds(50,posY,15,80);
+			setBounds(60,posY,15,80);
 		}	
 				try { Thread.sleep(time); } catch(Exception e) {}
 	} //end moveImage
 
 		private void moveImageUp(int power, int time) {
-		setIcon(icon);
-		if(posY >= 60) {
+		
+		if(posY >= 99) {
 			posY -= power;
-			setBounds(50,posY,15,80);
+			setBounds(60,posY,15,80);
 		}	
+
 		try { Thread.sleep(time); } catch(Exception e) {}
 	} //end moveImage
 	

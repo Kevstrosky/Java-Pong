@@ -31,7 +31,7 @@ public class Pelota extends JLabel implements Runnable {
 	}
 	public void run() {		
 		while(true) {
-			 moveImage(2, 10);
+			 moveImage(2, 4);
 		} //end while
 	} //end run
 	
@@ -52,6 +52,7 @@ public class Pelota extends JLabel implements Runnable {
               power+=1;
             }else{
               power = 2;
+              time = 4;
             }
         }
 
