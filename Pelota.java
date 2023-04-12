@@ -2,6 +2,14 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.Rectangle;
 import java.util.Random;
+import java.io.File;
+import java.io.IOException;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.FloatControl;
 
 public class Pelota extends JLabel implements Runnable {
 
@@ -20,14 +28,29 @@ public class Pelota extends JLabel implements Runnable {
   private Rectangle barraDerechaBounds;
 	private BarraIzquierda barra;
   private BarraDerecha barraDerecha;
+  private int puntosIzquierda = 0;
+  private int puntosDerecha = 0;
 
+  public static void playSound(String filePath) {
+        try {
+            File audioFile = new File(filePath);
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.start();
+			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+			gainControl.setValue(-6.0f);
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+		}
 
 	public Pelota(String url1, BarraIzquierda barra, BarraDerecha barraDerecha) {
 		this.url1 = url1;
+    this.barra = barra;
+    this.barraDerecha = barraDerecha;
 		icon = new ImageIcon(this.getClass().getResource(url1));
 		setIcon(icon);
-		this.barra = barra; // Almacenar la instancia de BarraIzquierda
-    this.barraDerecha = barraDerecha; // Almacenar la instancia de BarraDerecha
 	}
 	public void run() {		
 		while(true) {
@@ -36,14 +59,15 @@ public class Pelota extends JLabel implements Runnable {
 	} //end run
 	
 	private void moveImage(int power, int time) {
+    String filePath = "music/pong.wav";
     while (true) {
-        barraDerechaBounds = barraDerecha.getBounds(); // Obtener los bounds de la barra
-        barraBounds = barra.getBounds(); // Obtener los bounds de la barra
-        Rectangle pelotaBounds = this.getBounds(); // Obtener los bounds de la pelota
+        barraDerechaBounds = barraDerecha.getBounds();
+        barraBounds = barra.getBounds(); 
+        Rectangle pelotaBounds = this.getBounds(); 
 
-        // Comprobar si hay colisión con la barra
         if (pelotaBounds.intersects(barraBounds) || pelotaBounds.intersects(barraDerechaBounds)) {
-            // Si la pelota toca la barra, cambiar la dirección horizontal de la pelota
+           
+            playSound(filePath);
             Random rand = new Random();
             boolean success = rand.nextBoolean();
             direction = 180 - direction;
@@ -62,23 +86,36 @@ public class Pelota extends JLabel implements Runnable {
 
         // Verificar si la pelota ha chocado contra el borde de la pantalla
         if (newX < 0 || newX + ballWidth > screenWidth) {
+              playSound(filePath);
             // Cambiar la dirección horizontal de la pelota
             direction = 180 - direction;
             newX = Math.max(0, Math.min(screenWidth - ballWidth, newX));
         }
         if (newY < 100 || newY + ballHeight > screenHeight) {
+              playSound(filePath);
             // Cambiar la dirección vertical de la pelota
             direction = 360 - direction;
             newY = Math.max(0, Math.min(screenHeight - ballHeight, newY));
         }
 
-        // Actualizar la posición de la pelota
+         if (posX == 1  && !barraBounds.contains(posX, posY)) {
+            puntosIzquierda++;
+            System.out.println("Puntos izquierda: " + puntosIzquierda);
+        }
+
+        // Verificar si la pelota ha alcanzado la coordenada X deseada a la derecha
+        if (posX + ballWidth == 790 && !barraDerechaBounds.contains(posX + ballWidth, posY)) {
+            puntosDerecha++;
+            System.out.println("Puntos derecha: " + puntosDerecha);
+        }
+
+      
         posX = newX;
         posY = newY;
         setBounds(posX, posY, ballWidth, ballHeight);
 
         try {
-            Thread.sleep(time); // pausa para dar tiempo a que se actualice la posición
+            Thread.sleep(time);
         } catch(Exception e) {
             e.printStackTrace();
         }

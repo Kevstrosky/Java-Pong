@@ -31,7 +31,7 @@ public class Pong extends JFrame {
             clip.start();
             clip.loop(Clip.LOOP_CONTINUOUSLY); // para reproducir en loop
 			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-			gainControl.setValue(-20.0f);
+			gainControl.setValue(-30.0f);
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
@@ -54,6 +54,7 @@ public class Pong extends JFrame {
 		}
 
 		background.setIcon(icon);
+		
 		
 		BarraIzquierda izquierda = new BarraIzquierda("images/barra.png");
 		BarraDerecha derecha = new BarraDerecha("images/barraderecha.png");
